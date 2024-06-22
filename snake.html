@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Snake</title>
+</head>
+<style>
+    .button {
+        transition-duration: 0.4s;
+        font-size: 56px;
+    }
+
+    .button:hover {
+      background-color: #4CAF50; /* Green */
+      color: white;
+    }
+</style>
+<body onkeydown="turn(event)" onload="onLoad()">
+<div style="text-align: center;">
+<h1>Snake</h1>
+<canvas id="myCanvas" width="800" height="400" style="border:1px solid #000000;display: inline;"></canvas>
+</div>
+<div>
+<p style="font-size:24px;display: inline-block;float: left;vertical-align: middle;">Score: <span id="score">0</span></p>
+<button style="font-size: 24px;display: inline-block;float: right; vertical-align: middle;" onclick="start_game()">Restart</button>
+</div>
+<br>
+<div style="text-align:center;">
+    <button class="button" onclick="move('up')">UP</button><br><br>
+    <button class="button" onclick="move('left')">LEFT</button> 
+    <button class="button" onclick="move('right')">RIGHT</button><br><br>
+    <button class="button" onclick="move('down')">DOWN</button><br>
+</div>
+<script>
+    var red = "#FF0000";
+    var green = "#00FF00";
+    var white = "#FFFFFF";
+
+    var score;
+    var game_over;
+    var snake;
+    var food;
+    var rect_size = 20;
+    var mspf = 100;
+
+    class Rectangle {
+        constructor(x,y) {
+            this.x = x;
+            this.y = y
+        }
+
+        draw(color) {
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, rect_size, rect_size);
+            ctx.stroke();
+        }
+    }
+
+    function end_game(flag) {
+      if (flag){
+        return flag;
+      }
+      else {
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#FF0000";
+        ctx.font = "50px Arial";
+        ctx.fillText("Game Over", 240, 200)
+        return true;
+      }
+    }
+
+    class Snake {
+        constructor(){
+            this.rings = [];
+            this.direction = "right";
+            this.rings.push(new Rectangle(6*rect_size, 5*rect_size));
+            this.rings.push(new Rectangle(5*rect_size, 5*rect_size));
+            this.rings.push(new Rectangle(4*rect_size, 5*rect_size));
+        }
+
+        move() {
+            var next_ring = this.next_ring();
+            this.rings.pop();
+            this.rings = [next_ring].concat(this.rings);
+        }
+
+        clear() {
+          for (var ring of this.rings) {
+            ring.draw(white);
+          }
+        }
+
+        draw() {
+          for (var ring of this.rings) {
+            ring.draw(green);
+          }
+        }
+
+        changeDirection(direction) {
+            if (direction == "left" && (this.rings[0].x - rect_size != this.rings[1].x)) {
+                this.direction = direction;
+            }
+            if (direction == "right" && (this.rings[0].x + rect_size != this.rings[1].x)) {
+                this.direction = direction;
+            }
+            if (direction == "up" && (this.rings[0].y - rect_size != this.rings[1].y)) {
+                this.direction = direction;
+            }
+            if (direction == "down" && (this.rings[0].y + rect_size != this.rings[1].y)) {
+                this.direction = direction;
+            }
+        }
+
+        next_ring() {
+            var x = this.rings[0].x;
+            var y = this.rings[0].y;
+            var next_ring = new Rectangle(x,y);
+            if (this.direction == "right"){
+              next_ring.x += rect_size;
+            }
+            if (this.direction == "left"){
+              next_ring.x -= rect_size;
+            }
+            if (this.direction == "down"){
+              next_ring.y += rect_size;
+            }
+            if (this.direction == "up"){
+              next_ring.y -= rect_size;
+            }
+            return next_ring
+        }
+
+        grow(){
+            var next_ring = this.next_ring();
+            this.rings = [next_ring].concat(this.rings);
+        }
+
+        contains(x, y) {
+          for (var i in this.rings) {
+            var ring = this.rings[i];
+            if (ring.x == x && ring.y == y){
+              return true;
+            }
+          }
+          return false;
+        }
+
+        check_collisions() {
+          var next_ring = this.next_ring();
+          if (next_ring.x < 0 || next_ring.x >= 800){
+            return true;
+          }
+          else if (next_ring.y < 0 || next_ring.y >= 400) {
+            return true;
+          }
+          else if (this.contains(next_ring.x, next_ring.y)) {
+            return true;
+          }
+          else {
+            return false;
+          }
+        }
+    }
+
+    class Food {
+      constructor(snake) {
+        this.spawn(snake)
+      }
+
+      spawn(snake) {
+          var x = (Math.floor(Math.random() * 38) + 1) * rect_size;
+          var y = (Math.floor(Math.random() * 18) + 1) * rect_size;
+          while(snake.contains(x, y)) {
+            x = (Math.floor(Math.random() * 38) + 1) * rect_size;
+            y = (Math.floor(Math.random() * 18) + 1) * rect_size;
+          }
+          this.x = x;
+          this.y = y;
+          this.draw()
+      }
+
+      draw() {
+        var rect = new Rectangle(this.x, this.y);
+        rect.draw(red);
+      }
+    }
+
+    function start_game() {
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = white;
+      ctx.fillRect(0, 0, 800, 400);
+      ctx.stroke();
+      score = 0;
+      game_over = false;
+      snake = new Snake();
+      food = new Food(snake);
+      snake.draw();
+    }
+
+    function onLoad(){
+      start_game()
+    }
+
+    function turn(event) {
+      if (event.keyCode == 37) {
+        snake.changeDirection("left");
+      }
+      if (event.keyCode == 39) {
+        snake.changeDirection("right");
+      }
+      if (event.keyCode == 38) {
+        snake.changeDirection("up");
+      }
+      if (event.keyCode == 40) {
+        snake.changeDirection("down");
+      }
+    }
+
+    function move(direction) {
+        snake.changeDirection(direction);
+    }
+
+    var intervalId = setInterval(function() {
+      if (game_over || snake.check_collisions()){
+        game_over = end_game(game_over);
+      }
+      else {
+        snake.clear();
+        var next_ring = snake.next_ring();
+        if (next_ring.x == food.x && next_ring.y == food.y) {
+          snake.grow();
+          score += 1;
+          snake.draw();
+          food.spawn(snake);
+        }
+        else {
+          snake.move(); 
+          snake.draw();
+        }
+        document.getElementById("score").innerHTML = score;
+      }
+    },
+    mspf);
+</script>
+
+</body>
+</html>
