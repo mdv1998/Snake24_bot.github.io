@@ -39,7 +39,7 @@
     var game_over;
     var snake;
     var food;
-    var rect_size = 10;
+    var rect_size = 5;
     var mspf = 100;
 
     class Rectangle {
@@ -66,7 +66,7 @@
         var ctx = canvas.getContext("2d");
         ctx.fillStyle = "#FF0000";
         ctx.font = "50px Arial";
-        ctx.fillText("Game Over", 150, 150)
+        ctx.fillText("Game Over", 100, 100)
         return true;
       }
     }
@@ -149,10 +149,10 @@
 
         check_collisions() {
           var next_ring = this.next_ring();
-          if (next_ring.x < 0 || next_ring.x >= 400){
+          if (next_ring.x < 0 || next_ring.x >= 300){
             return true;
           }
-          else if (next_ring.y < 0 || next_ring.y >= 400) {
+          else if (next_ring.y < 0 || next_ring.y >= 300) {
             return true;
           }
           else if (this.contains(next_ring.x, next_ring.y)) {
