@@ -17,7 +17,7 @@
 <body onkeydown="turn(event)" onload="onLoad()">
 <div style="text-align: center;">
 <h1>Snake</h1>
-<canvas id="myCanvas" width="400" height="400" style="border:3px solid #000000;display: inline;"></canvas>
+<canvas id="myCanvas" width="300" height="300" style="border:3px solid #000000;display: inline;"></canvas>
 </div>
 <div>
 <p style="font-size:24px;display: inline-block;float: left;vertical-align: middle;">Score: <span id="score">0</span></p>
@@ -39,7 +39,7 @@
     var game_over;
     var snake;
     var food;
-    var rect_size = 20;
+    var rect_size = 10;
     var mspf = 100;
 
     class Rectangle {
@@ -66,7 +66,7 @@
         var ctx = canvas.getContext("2d");
         ctx.fillStyle = "#FF0000";
         ctx.font = "50px Arial";
-        ctx.fillText("Game Over", 240, 200)
+        ctx.fillText("Game Over", 150, 150)
         return true;
       }
     }
@@ -191,7 +191,7 @@
       var canvas = document.getElementById("myCanvas");
       var ctx = canvas.getContext("2d");
       ctx.fillStyle = white;
-      ctx.fillRect(0, 0, 400, 400);
+      ctx.fillRect(0, 0, 300, 300);
       ctx.stroke();
       score = 0;
       game_over = false;
