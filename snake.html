@@ -17,7 +17,7 @@
 <body onkeydown="turn(event)" onload="onLoad()">
 <div style="text-align: center;">
 <h1>Snake</h1>
-<canvas id="myCanvas" width="300" height="300" style="border:3px solid #000000;display: inline;"></canvas>
+<canvas id="myCanvas" width="400" height="400" style="border:3px solid #000000;display: inline;"></canvas>
 </div>
 <div>
 <p style="font-size:24px;display: inline-block;float: left;vertical-align: middle;">Score: <span id="score">0</span></p>
@@ -149,7 +149,7 @@
 
         check_collisions() {
           var next_ring = this.next_ring();
-          if (next_ring.x < 0 || next_ring.x >= 800){
+          if (next_ring.x < 0 || next_ring.x >= 400){
             return true;
           }
           else if (next_ring.y < 0 || next_ring.y >= 400) {
@@ -191,7 +191,7 @@
       var canvas = document.getElementById("myCanvas");
       var ctx = canvas.getContext("2d");
       ctx.fillStyle = white;
-      ctx.fillRect(0, 0, 800, 400);
+      ctx.fillRect(0, 0, 400, 400);
       ctx.stroke();
       score = 0;
       game_over = false;
