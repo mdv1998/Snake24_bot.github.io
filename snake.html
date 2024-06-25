@@ -40,7 +40,7 @@
     var snake;
     var food;
     var rect_size = 5;
-    var mspf = 100;
+    var mspf = 50;
 
     class Rectangle {
         constructor(x,y) {
@@ -65,7 +65,7 @@
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
         ctx.fillStyle = "#FF0000";
-        ctx.font = "50px Arial";
+        ctx.font = "14px Arial";
         ctx.fillText("Game Over", 100, 100)
         return true;
       }
