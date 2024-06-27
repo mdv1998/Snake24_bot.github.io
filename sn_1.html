@@ -5,12 +5,12 @@
  
 	<style type="text/css">
 	#canvas_frame{
-		height:500px;
-		width:500px;
+		height:350px;
+		width:350px;
 		margin:auto;
 		background:#444;
-		border-radius:8px;
-		box-shadow:0px 0px 15px #000;
+		border-radius:3px;
+		box-shadow:0px 0px 5px #000;
 	}
 	canvas{
 		background:#7df58f;
@@ -29,7 +29,7 @@
 </head>
 <body>
 	<div id="canvas_frame">
-		<canvas id="mycanvas" width="450" height="450"></canvas>
+		<canvas id="mycanvas" width="300" height="300"></canvas>
 	</div>
 
     
@@ -71,8 +71,8 @@
 */
 	 //Create game object
 	var game = {
-		width : 450,
-		height : 450,
+		width : 300,
+		height : 300,
 	};
 	 //Create a snake
 	var snake = {
@@ -84,7 +84,7 @@
 	};
 	 //Create food
 	var food = {
-		x : 300,
+		x : 150,
 		y : 150,
 		color : "green",
 	};
@@ -94,7 +94,7 @@
  
 	 // depict a snake
 	function drawSnake(){
-		ctx.clearRect(0,0,450,450);
+		ctx.clearRect(0,0,300,300);
 		var headImg = new Image();
 		var headSrc = "./snake_head_min_" + snake.direction +".png";
 		headImg.src= headSrc;
@@ -109,8 +109,8 @@
 	 //Describe the food
 	function drawFood(){
 		if(IsEat()){
-			food.x = parseInt(Math.random() * 28) * 15;
-			food.y = parseInt(Math.random() * 28) * 15;
+			food.x = parseInt(Math.random() * 14) * 15;
+			food.y = parseInt(Math.random() * 14) * 15;
 		}
 		var foodImg = new Image();
 		foodImg.src="./apple_min.png";
@@ -163,7 +163,7 @@
             };
 	 //Create food
             food = {
-		x : 300,
+		x : 150,
 		y : 150,
 		color : "green",
 	};
