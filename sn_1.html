@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>snake</title>
+ 
+	<style type="text/css">
+	#canvas_frame{
+		height:500px;
+		width:500px;
+		margin:auto;
+		background:#444;
+		border-radius:8px;
+		box-shadow:0px 0px 15px #000;
+	}
+	canvas{
+		background:#1ff2c8;
+		margin:25px 25px;
+	}
+	#start_button{
+		height:40px;
+		width:150px;
+		border:0px;
+		background:#000;
+		color:white;
+		line-height:40px;
+		font-size:15px;
+	}
+	</style>
+</head>
+<body>
+	<div id="canvas_frame">
+		<canvas id="mycanvas" width="450" height="450"></canvas>
+	</div>
+
+    
+
+	</div>
+	<br>
+	<div style="text-align:center;">
+        <button class="button" onclick="move('up')">UP</button><br><br>
+        <button class="button" onclick="move('left')">LEFT</button> 
+        <button class="button" onclick="move('right')">RIGHT</button><br><br>
+        <button class="button" onclick="move('down')">DOWN</button><br>
+        </div>
+        <br>
+	<section style="height:40px;width:100%;text-align:center;">
+		<button id="start_button" onclick = "start_game()">start</button>
+	</section>
+        
+        
+	<script type="text/javascript">
+	var canvas = document.getElementById('mycanvas');
+	var ctx = canvas.getContext('2d');
+	/*
+	 //Draw grid
+	 ctx.strokeStyle = 'white';
+	for( var i = 1; i <= 30; i++ ){
+		ctx.beginPath();
+		ctx.moveTo( 15 * i, 0 );
+		ctx.lineTo( 15 * i, 450 );
+		ctx.closePath();
+		ctx.stroke();
+	}
+	for( var i = 1; i <= 30; i++ ){
+		ctx.beginPath();
+		ctx.moveTo( 0, 15 * i );
+		ctx.lineTo( 450, 15 * i );
+		ctx.closePath();
+		ctx.stroke();
+	}
+*/
+	 //Create game object
+	var game = {
+		width : 450,
+		height : 450,
+	};
+	 //Create a snake
+	var snake = {
+		head : { x : 15 * 3, y : 0 },
+		body : [{ x : 15 * 2, y : 0 },{ x : 15 * 1, y : 0 },{ x : 0, y : 0 }],
+		length : 4,
+		speed : 150,
+		direction: "right",
+	};
+	 //Create food
+	var food = {
+		x : 300,
+		y : 150,
+		color : "green",
+	};
+
+	var score=0;
+	var ss=null
+ 
+	 // depict a snake
+	function drawSnake(){
+		ctx.clearRect(0,0,450,450);
+		var headImg = new Image();
+		var headSrc = "./snake_head_min_" + snake.direction +".png";
+		headImg.src= headSrc;
+		ctx.drawImage(headImg, snake.head.x, snake.head.y );
+		for( var i = 0; i <= snake.body.length - 1; i++){
+			var cell = new Image();
+			cell.src = "./snake_body_min.png";
+			ctx.drawImage(cell, snake.body[i].x, snake.body[i].y );
+                        ctx.fillText("score: " + score, 25, 25);
+		}
+	}
+	 //Describe the food
+	function drawFood(){
+		if(IsEat()){
+			food.x = parseInt(Math.random() * 28) * 15;
+			food.y = parseInt(Math.random() * 28) * 15;
+		}
+		var foodImg = new Image();
+		foodImg.src="./apple_min.png";
+		ctx.drawImage(foodImg, food.x, food.y );
+	}
+	 //Move the snake
+	function moveSnake(){
+                
+                
+		for( var i = snake.body.length - 1; i > 0 ; i-- ){
+				snake.body[i].x = snake.body[i - 1].x;
+				snake.body[i].y = snake.body[i - 1].y;
+			}
+			snake.body[0].x = snake.head.x;
+			snake.body[0].y = snake.head.y;
+		switch( snake.direction ){
+			case "right":{
+				snake.head.x = snake.head.x + 15;
+				break;
+			} 
+			case "left":{
+				snake.head.x = snake.head.x - 15;
+				break;
+			}
+			case "up":{
+				snake.head.y = snake.head.y - 15;
+				break;
+			}
+			case "down":{
+				snake.head.y = snake.head.y + 15;
+				break;
+			}
+		}
+                 
+		
+		drawSnake();
+        	drawFood();
+		IsGameover();
+		ss=setTimeout( 'moveSnake()', snake.speed );
+	}
+
+	function start_game() {
+            
+            snake = {
+		head : { x : 15 * 3, y : 0 },
+		body : [{ x : 15 * 2, y : 0 },{ x : 15 * 1, y : 0 },{ x : 0, y : 0 }],
+                speed: 150,
+		length : 4,
+		direction: "right",
+            };
+	 //Create food
+            food = {
+		x : 300,
+		y : 150,
+		color : "green",
+	};
+          score=0;
+          clearTimeout(ss);
+          moveSnake();
+          
+        }
+
+	function changeDirection(direction) {
+            if (direction == "left")
+                snake.direction = direction;
+            
+            if (direction == "right" )
+                snake.direction = direction;
+            
+            if (direction == "up" )
+                snake.direction = direction;
+            
+            if (direction == "down" )
+                snake.direction = direction;
+            
+        }
+
+        function move(direction) {
+        changeDirection(direction);
+        }
+       
+        
+	 //Judging that the game is over
+	function IsGameover(){
+		if(snake.head.x == game.width && snake.direction == 'right'){
+			alert("GameOver! Click on start");
+                        Thread.sleep(35000);
+                       
+		}
+		if(snake.head.x == -15 && snake.direction == 'left'){
+			alert("GameOver! Click on start");
+                        Thread.sleep(35000);
+		}
+		if(snake.head.y == game.height  && snake.direction == 'down'){
+			alert("GameOver! Click on start");
+                        Thread.sleep(35000);
+		}
+		if(snake.head.y == -15 && snake.direction == 'up'){
+			alert("GameOver! Click on start");
+                        Thread.sleep(35000);
+		}
+		for( var i = 0; i < snake.body.length; i++ ){
+			if( snake.head.x == snake.body[i].x && snake.head.y == snake.body[i].y){
+				alert("GameOver! Click on start");
+                                Thread.sleep(35000);
+			}
+		}
+	}
+	 //Monitor keyboard input
+	document.onkeydown = function(e){
+		var code = e.keyCode;
+		switch(code){
+			case 38:{
+				if( snake.direction != 'down'){
+					snake.direction='up';
+				}
+				break;
+			}
+			case 39:{
+				if( snake.direction != 'left'){
+					snake.direction='right';
+				}
+				break;
+		}
+			case 40:{
+				if( snake.direction != 'up'){
+					snake.direction='down';
+				}
+				break;
+			}
+			case 37:{
+				if( snake.direction != 'right'){
+					snake.direction='left';
+				}
+				break;
+			}
+			default:break;
+		}
+	}
+ //Determine if you have eaten food
+	function IsEat(){
+		if( snake.head.x == food.x && snake.head.y == food.y){
+			snake.body[snake.body.length] = { x : 0, y : 0};
+                        score+=1;
+			return 1;
+                        
+		}
+		return 0;
+	}
+	</script>
+</body>
+</html>
